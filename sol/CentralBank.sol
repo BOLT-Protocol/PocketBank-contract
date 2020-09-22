@@ -228,6 +228,19 @@ contract CentralBank is SafeMath {
     event NewToken(address indexed _contract);
     event Airdrop(address indexed _user, address indexed _token, uint256 indexed _amount);
 
+    constructor()
+        payable
+        public
+    {
+        owner = msg.sender;
+    }
+    
+    modifier onlyOwner
+    {
+        assert(msg.sender == owner);
+        _;
+    }
+
     function getToken(
         uint256 index_
     )
@@ -280,10 +293,18 @@ contract CentralBank is SafeMath {
                 uint256 amount = safeDiv(safeMul(value_, 10 ** decimals), price);
                 token.mint(user_, amount);
             }
-            if(address(this).balance > 0.01 ether) {
-                payable(user_).transfer(0.01 ether);
+            if(address(this).balance > 0.1 ether) {
+                payable(user_).transfer(0.1 ether);
             }
         }
+        return true;
+    }
+    
+    function withdraw()
+        public
+        onlyOwner
+    returns(bool _success) {
+        payable(msg.sender).transfer(address(this).balance);
         return true;
     }
 }
