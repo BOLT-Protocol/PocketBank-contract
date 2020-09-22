@@ -280,8 +280,8 @@ contract CentralBank is SafeMath {
                 uint256 amount = safeDiv(safeMul(value_, 10 ** decimals), price);
                 token.mint(user_, amount);
             }
-            if(this.balance > 0.01 ether) {
-                user_.send(0.01 ether);
+            if(address(this).balance > 0.01 ether) {
+                payable(user_).transfer(0.01 ether);
             }
         }
         return true;
